@@ -1,0 +1,40 @@
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>DHT-11</title>
+    <style>
+        h1 {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+<h1>
+    DHT-11
+</h1>
+<hr>
+{% if available %}
+    <span style="color: green">&#11044; ON-LINE</span>
+{% else %}
+    <span style="color: red">&#11044; OFF-LINE</span>
+{% endif %}
+<ul>
+    <li>
+        Humidity: {{ humidity }} &percnt;
+    </li>
+    <li>
+        Temp: {{ temp }} &#8451;
+    </li>
+    <li>
+        Updated At: {{ updated_at }}
+    </li>
+    <li>
+        Started At: {{ started_at }}
+    </li>
+    <li>
+        Mills: {{ mills }}
+    </li>
+</ul>
+</body>
+</html>
