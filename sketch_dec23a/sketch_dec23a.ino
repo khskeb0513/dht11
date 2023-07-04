@@ -9,8 +9,8 @@ void setup() {
 }
 
 void loop() {
-  String output = "mills,";
-  output += String(millis());
+  String output = "micros,";
+  output += String(micros());
   output += ",available,";
   output += String(dht.read());
   float h = dht.readHumidity();

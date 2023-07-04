@@ -1,3 +1,5 @@
+import time
+
 from serial import Serial
 import threading
 from dotenv import load_dotenv
@@ -12,20 +14,26 @@ con = Serial(port=port, baudrate=baud)
 latest_line = ',,,,,,,'
 parsed = {}
 started_at = datetime.fromtimestamp(0)
+latest_micros = 0
 
 
 def parse_line(line: str):
     global parsed
+    global latest_micros
+    global started_at
     items = line.split(',')
-    mills = int(items[1])
+    micros = int(items[1])
+    if micros <= latest_micros:
+        started_at = datetime.fromtimestamp(0)
+        latest_micros = micros
     available = bool(int(items[3] or '0'))
     if not available:
         return
     humidity = float(items[5])
     temp = float(items[7])
-    updated_at = datetime.fromtimestamp(started_at.timestamp() + (mills / 1000))
+    updated_at = datetime.fromtimestamp(started_at.timestamp() + micros / 1e6)
     parsed = {
-        'mills': mills,
+        'micros': micros,
         'started_at': started_at,
         'updated_at': updated_at,
         'available': available,
@@ -44,7 +52,7 @@ def read():
                 started_at = datetime.now()
             line.append(char)
         latest_line = ''.join([chr(i) for i in line]).strip()
-        if latest_line.startswith('mills,') and latest_line.endswith(';'):
+        if latest_line.startswith('micros,') and latest_line.endswith(';'):
             parse_line(latest_line[0:-1])
 
 
